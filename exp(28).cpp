@@ -1,4 +1,3 @@
-2 UNREAD MESSAGES
 #include <stdio.h>
 long long power_mod(long long a, long long b, long long m) {
     long long result = 1;
