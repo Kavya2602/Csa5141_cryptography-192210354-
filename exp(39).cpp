@@ -1,83 +1,73 @@
-#include <bits/stdc++.h>
-using namespace std;
- 
-void printString(string S, int N)
+#include <stdio.h>
+
+#include <stdlib.h>
+
+#include <string.h>
+
+
+
+#define BLOCK_SIZE 8 
+
+void ecb_encrypt(char* plaintext, char* key, int len)
+
 {
-    string plaintext[5];
- 
-    int freq[26] = { 0 };
- 
-    int freqSorted[26];
- 
-    int Used[26] = { 0 };
- 
-    for (int i = 0; i < N; i++) {
-        if (S[i] != ' ') {
-            freq[S[i] - 'A']++;
+
+    int i, j;
+
+    char block[BLOCK_SIZE];
+
+    char ciphertext[len];
+
+
+
+    int padding = BLOCK_SIZE - (len % BLOCK_SIZE);
+
+    if (padding > 0 && padding < BLOCK_SIZE) {
+
+        memset(plaintext + len, 0, padding);
+
+        len += padding;
+
+    }
+
+
+
+    for (i = 0; i < len; i += BLOCK_SIZE) {
+
+        memcpy(block, plaintext + i, BLOCK_SIZE);
+
+        for (j = 0; j < BLOCK_SIZE; j++) {
+
+            block[j] ^= key[j];
+
         }
+
+        memcpy(ciphertext + i, block, BLOCK_SIZE);
+
     }
- 
-    for (int i = 0; i < 26; i++) {
-        freqSorted[i] = freq[i];
-    }
- 
-    string T = "ETAOINSHRDLCUMWFGYPBVKJXQZ";
- 
-    sort(freqSorted, freqSorted + 26, greater<int>());
- 
-    for (int i = 0; i < 5; i++) {
- 
-        int ch = -1;
-        for (int j = 0; j < 26; j++) {
- 
-            if (freqSorted[i] == freq[j] && Used[j] == 0) {
-                Used[j] = 1;
-                ch = j;
-                break;
-            }
-        }
-        if (ch == -1)
-            break;
- 
-        int x = T[i] - 'A';
- 
-        x = x - ch;
- 
-        string curr = "";
- 
-        for (int k = 0; k < N; k++) {
- 
-            if (S[k] == ' ') {
-                curr += ' ';
-                continue;
-            }
- 
-            int y = S[k] - 'A';
-            y += x;
- 
-            if (y < 0)
-                y += 26;
-            if (y > 25)
-                y -= 26;
- 
-            curr += 'A' + y;
-        }
- 
-        plaintext[i] = curr;
-    }
- 
-    for (int i = 0; i < 5; i++) {
-        cout << plaintext[i] << endl;
-    }
+
+
+
+    printf("Ciphertext: %s\n", ciphertext);
+
 }
- 
+
+
+
 int main()
+
 {
-   
-    string S = "B TJNQMF NFTTBHF";
-    int N = S.length();
- 
-    printString(S, N);
- 
+
+    char plaintext[] = "This is a test message.";
+
+    char key[] = "secretke";
+
+
+
+    ecb_encrypt(plaintext, key, strlen(plaintext));
+
+    
+
     return 0;
+
 }
